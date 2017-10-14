@@ -1,0 +1,20 @@
+sudo: required
+
+language: java
+
+services:
+  - docker
+
+env:
+  global:
+    - REPO=staticvoiduk/iou
+    - COMMIT=${TRAVIS_COMMIT::8}
+
+after_success:
+  - docker build -t staticvoiduk/$REPO:$COMMIT .
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+      docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+      docker tag $REPO:$COMMIT
+      docker tag $REPO:latest
+      docker push $REPO
+    fi
