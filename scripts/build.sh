@@ -17,12 +17,6 @@ ROOT_DIR=$(cd "$CWD/.." && pwd)
 (
   cd $ROOT_DIR
 
-  if [[ ! "$(git status 2> /dev/null)" =~ "working directory clean" ]]; then
-    echo "Cannot build: you have unstashed changes."
-    echo "Please stash or commit them, then try again."
-    exit 1
-  fi
-
   HEAD=$(git rev-list HEAD -n1)
   docker build --build-arg version=$HEAD -t $1:$HEAD -t $1:latest .
 
