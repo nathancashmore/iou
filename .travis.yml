@@ -11,10 +11,5 @@ env:
     - COMMIT=${TRAVIS_COMMIT::8}
 
 after_success:
-  - docker build -t staticvoiduk/$REPO:$COMMIT .
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-      docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-      docker tag $REPO:$COMMIT
-      docker tag $REPO:latest
-      docker push $REPO
-    fi
+  - docker build -t $REPO:$COMMIT .
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"; docker tag $REPO:$COMMIT $REPO:latest; docker push $REPO; fi
