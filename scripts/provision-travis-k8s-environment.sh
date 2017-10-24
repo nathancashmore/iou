@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Provision Travis-CI"
+echo "Provision Travis-CI for K8s"
 
 export KUBE_CA_CERT=$(kubectl config view --flatten --output=json \
        | jq --raw-output '.clusters[0] .cluster ["certificate-authority-data"]')

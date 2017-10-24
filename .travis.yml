@@ -12,9 +12,9 @@ env:
   - COMMIT=${TRAVIS_COMMIT::8}
 
 before_script:
-  - scripts/travis-install-k8s.sh
-  - kubectl --kubeconfig kube/kubeconfig apply -f kube/deployment.yml
+  - scripts/install-k8s-and-config.sh
+  - kubectl --kubeconfig kube/kubeconfig apply -f kube/deployment.yml  #Only required so first deployment to k8s env works
 
 after_success:
   - docker build -t $REPO:$COMMIT .
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then scripts/travis-deploy-image.sh; fi
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then scripts/deploy-docker-image-to-k8s.sh; fi
