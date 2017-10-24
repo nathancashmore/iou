@@ -37,7 +37,7 @@ public class IouApplicationTests {
 	@Test
 	public void getUserNotSpecified() throws Exception {
 		String userUrl = this.base.toString() + USER_PATH;
-		JSONObject expected = new JSONObject().put("name", "Stranger");
+		JSONObject expected = new JSONObject().put("name", "Unknown");
 
 		ResponseEntity<String> response = template.getForEntity(userUrl, String.class);
 		assertThat(response.getBody(), equalTo(expected.toString()));
