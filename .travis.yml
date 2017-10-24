@@ -12,17 +12,9 @@ env:
   - COMMIT=${TRAVIS_COMMIT::8}
 
 before_script:
-  - curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
-  - sed -i -e 's|KUBE_CA_CERT|'"${KUBE_CA_CERT}"'|g' ./kube/kubeconfig
-  - sed -i -e 's|KUBE_ENDPOINT|'"${KUBE_ENDPOINT}"'|g' ./kube/kubeconfig
-  - sed -i -e 's|KUBE_ADMIN_CERT|'"${KUBE_ADMIN_CERT}"'|g' ./kube/kubeconfig
-  - sed -i -e 's|KUBE_ADMIN_KEY|'"${KUBE_ADMIN_KEY}"'|g' ./kube/kubeconfig
-  - sed -i -e 's|KUBE_USERNAME|'"${KUBE_USERNAME}"'|g' ./kube/kubeconfig
+  - scripts/travis-install-k8s.sh
   - kubectl --kubeconfig kube/kubeconfig apply -f kube/deployment.yml
-
-script:
-  - docker build -t $REPO:$COMMIT .
 
 after_success:
   - docker build -t $REPO:$COMMIT .
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"; docker tag $REPO:$COMMIT $REPO:latest; docker push $REPO; kubectl --kubeconfig kube/kubeconfig set image deployment/$APP $APP=$REPO:$COMMIT; kubectl --kubeconfig kube/kubeconfig rollout history deployment/$APP; fi
+  - scripts/travis-deploy-image.sh
