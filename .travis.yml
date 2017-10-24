@@ -17,4 +17,4 @@ before_script:
 
 after_success:
   - docker build -t $REPO:$COMMIT .
-  - scripts/travis-deploy-image.sh
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then scripts/travis-deploy-image.sh; fi
