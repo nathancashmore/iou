@@ -31,7 +31,7 @@ public class UserControllerTest {
             mvc.perform(MockMvcRequestBuilders.get("/user").accept(MediaType.APPLICATION_JSON))
                     .andDo(print())
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("name").value("Stranger"));
+                    .andExpect(jsonPath("name").value("Unknown"));
         }
 
 }

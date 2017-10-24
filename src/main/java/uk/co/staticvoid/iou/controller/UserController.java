@@ -8,7 +8,7 @@ import uk.co.staticvoid.iou.model.User;
 public class UserController {
 
     @RequestMapping("/user")
-    public @ResponseBody User userDetails(@RequestParam(value="name", required=false, defaultValue="Stranger") String name) {
+    public @ResponseBody User userDetails(@RequestParam(value="name", required=false, defaultValue="Unknown") String name) {
         return new User(name);
     }
 }
