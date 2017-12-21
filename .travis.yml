@@ -13,7 +13,7 @@ env:
 
 before_script:
   - scripts/install-k8s-and-config.sh
-  - kubectl --kubeconfig kube/kubeconfig apply -f kube/deployment.yml  #Only required so first deployment to k8s env works
+  - kubectl apply -f kube/deployment.yml  #Only required so first deployment to k8s env works
 
 after_success:
   - docker build -t $REPO:$COMMIT .
