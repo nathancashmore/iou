@@ -1,10 +1,14 @@
 #!/bin/bash
 
-curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
 
-sed -i -e 's|KUBE_CA_CERT|'"${KUBE_CA_CERT}"'|g' ./kube/kubeconfig
-sed -i -e 's|KUBE_ENDPOINT|'"${KUBE_ENDPOINT}"'|g' ./kube/kubeconfig
-sed -i -e 's|KUBE_ADMIN_CERT|'"${KUBE_ADMIN_CERT}"'|g' ./kube/kubeconfig
-sed -i -e 's|KUBE_ADMIN_KEY|'"${KUBE_ADMIN_KEY}"'|g' ./kube/kubeconfig
-sed -i -e 's|KUBE_USERNAME|'"${KUBE_USERNAME}"'|g' ./kube/kubeconfig
+mkdir ${HOME}/.kube
+cp kube/kubeconfig ${HOME}/.kube/config
 
+kubectl config set users.iou.staticvoid.co.uk.client-key-data $KUBE_ADMIN_KEY
+kubectl config set users.iou.staticvoid.co.uk.client-certificate-data $KUBE_ADMIN_CERT
+kubectl config set clusters.iou.staticvoid.co.uk.certificate-authority-data $KUBE_CA_CERT
+
+kubectl get nodes
