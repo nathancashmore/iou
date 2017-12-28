@@ -7,7 +7,8 @@ System to record how much you owe them..
 ```
 
 # Deployment
-To deploy to a k8s provisioned environment:
+Let travis deploy the application to a pre provisioned environment.
+Excecute the following once to initialise travis and docker with required deployment settings
 ```
-kubectl apply -f ./kube/deployment.yml
+./scripts/provision-travis-k8s-environment.sh
 ```
