@@ -15,12 +15,15 @@ import java.net.URL;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IouApplicationTests {
 
-	public static final String USER_PATH = "user";
+	private static final String USER_PATH = "user";
+	private static final String DOC_PATH = "swagger-ui.html";
+
 	@LocalServerPort
 	private int port;
 
@@ -51,5 +54,13 @@ public class IouApplicationTests {
         ResponseEntity<String> response = template.getForEntity(userUrl, String.class);
         assertThat(response.getBody(), equalTo(expected.toString()));
     }
+    
+    @Test
+	public void	getDocumentation() throws Exception {
+		String docsUrl = this.base.toString() + DOC_PATH;
+
+		ResponseEntity<String> response = template.getForEntity(docsUrl, String.class);
+		assertTrue(response.getStatusCode().is2xxSuccessful());
+	}
 
 }
