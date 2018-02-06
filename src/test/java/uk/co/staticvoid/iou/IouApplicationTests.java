@@ -1,6 +1,5 @@
 package uk.co.staticvoid.iou;
 
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,21 +7,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import uk.co.staticvoid.iou.conveyor.request.AddPersonRequest;
+import uk.co.staticvoid.iou.conveyor.response.AddPersonResponse;
+import uk.co.staticvoid.iou.conveyor.response.GetPersonResponse;
 
 import java.net.URL;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
+@TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IouApplicationTests {
 
-	private static final String USER_PATH = "user";
+	private static final String PERSON_PATH = "person";
 	private static final String DOC_PATH = "swagger-ui.html";
+
+	private static final String NICKNAME = "CrazyLegs";
 
 	@LocalServerPort
 	private int port;
@@ -38,24 +44,21 @@ public class IouApplicationTests {
 	}
 
 	@Test
-	public void getUserNotSpecified() throws Exception {
-		String userUrl = this.base.toString() + USER_PATH;
-		JSONObject expected = new JSONObject().put("name", "Unknown");
+	public void addThenGetPerson() throws Exception {
+		String addPersonUrl = this.base.toString() + PERSON_PATH;
 
-		ResponseEntity<String> response = template.getForEntity(userUrl, String.class);
-		assertThat(response.getBody(), equalTo(expected.toString()));
+		HttpEntity<AddPersonRequest> addPersonRequest = new HttpEntity<>(new AddPersonRequest(NICKNAME));
+		AddPersonResponse addPersonResponse = template.postForObject(addPersonUrl, addPersonRequest, AddPersonResponse.class);
+
+		assertThat(addPersonResponse.getUuid()).isNotEmpty();
+
+		String getPersonUrl = this.base.toString() + PERSON_PATH + "/" + addPersonResponse.getUuid();
+		GetPersonResponse getPersonResponse = template.getForObject(getPersonUrl, GetPersonResponse.class);
+
+		assertThat(getPersonResponse.getNickname()).isEqualTo(NICKNAME);
 	}
 
-    @Test
-    public void getUser() throws Exception {
-        String userUrl = this.base.toString() + USER_PATH + "?name=Bob";
-        JSONObject expected = new JSONObject().put("name", "Bob");
-
-        ResponseEntity<String> response = template.getForEntity(userUrl, String.class);
-        assertThat(response.getBody(), equalTo(expected.toString()));
-    }
-    
-    @Test
+	@Test
 	public void	getDocumentation() throws Exception {
 		String docsUrl = this.base.toString() + DOC_PATH;
 
