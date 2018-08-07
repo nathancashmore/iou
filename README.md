@@ -37,6 +37,9 @@ To connect to the running DB use:
 docker run -it --rm --link iou-db:postgres postgres psql -h postgres -U postgres iou
 ```
 
+# Build
+
+
 # Deployment
 Let travis deploy the application to a pre provisioned environment.
 Exececute the following once to initialise travis and docker with required deployment settings
