@@ -1,4 +1,16 @@
-FROM openjdk:8u111-jre-alpine
+FROM gradle:jdk8
+
+USER root
+
+COPY . /app
+
+WORKDIR /app
+
+RUN chmod 777 * -R
+
+RUN ls -l
+
+RUN gradle build
 
 VOLUME /tmp
 EXPOSE 8080
