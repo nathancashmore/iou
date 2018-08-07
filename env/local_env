@@ -1,0 +1,4 @@
+DB_URL=jdbc:postgresql://${POSTGRES_PORT_5432_TCP_ADDR}/iou
+DB_USER=postgres
+DB_PASSWORD=mysecretpassword
+DB_DRIVER=org.postgresql.Driver
