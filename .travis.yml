@@ -1,17 +1,18 @@
 sudo: required
-
 language: java
-
 services:
-  - docker
-
+- docker
 env:
   global:
   - APP=iou
   - REPO=staticvoiduk/$APP
   - COMMIT=${TRAVIS_COMMIT::8}
-
 after_success:
-  - docker build -t $REPO:$COMMIT . --build-arg JAR_FILE=./build/libs/$APP-0.0.1-SNAPSHOT.jar
-  - scripts/push-to-repo.sh
-
+- docker build -t $REPO:$COMMIT . --build-arg JAR_FILE=./build/libs/$APP-0.0.1-SNAPSHOT.jar
+- scripts/push-to-repo.sh
+notifications:
+  slack:
+    rooms:
+      secure: nrMqvp0IWjDgNALRl25QIkI7gJQDiMVX0fdR2XFHrKZiVJp1eLI0XEYkg158Le67nXTVjPOs6ZXnHUsEaDjMMjpqU+kpO63ch6rXdHlmoYkHsh2v+enfjl9BiCxxz/UV2oVWKJJ5lLP2nZb5SXcVDWIS/FCEAqJtrkFm0/vBuNep5yo+4RWhahI6Ym09mnImRzds+zsezIAODqa9pakLM4Geh1CyH8l8d+SyhybKz8OywWz2DunUecO0fLduEQffBXJEfbF1SHFNQuUANlP+4l9GG5eGuUG72UFpB5HT7CX+akeDNIggdjcTkD7cI/m7zT6oJugnPhbRBV5HbTSxj+kGTyEouUiGKtT015XRdcVKStMjWLtqpqwZgD+h+Dxv1p6BZ8xkg3o6wl/osQmfNGMsfbOy1l029470z9oJeO24+AiEVn+N8I+KZn+s2nsJ7wLIGQ5/vO2m21yX7GLSbWz0V2OSaUI46vSYE71vCnxYtsnftgHr+FgVa3cIH4pt1U8GD/DjBXP19aPEzIw7kiUeVCrdS4iKnSC2wlFCLOn/9BvCGdFYQLOzxnZ27UCy28Pb6txFwRZ0B+dXcFDjeQTqseLiiyVVTwTRh7dYT4H6d5a5+Knqp+lWhkrdd4TXsgjt68qJfnwNrmqEz3nL9iHw8Gciw4YZP/RBY2YEwP0=
+    on_success: always
+    on_failure: always
