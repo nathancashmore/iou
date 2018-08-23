@@ -45,9 +45,9 @@ psql "sslmode=disable dbname=iou user=postgres hostaddr=[IP_ADDRESS]"
 
 # Docker deployment
 ## Build
-
+See the travis.yml for details but essentially this boils down to the following:
 ```
-./gradlew build
+./gradlew clean build
 docker build -t iou . --build-arg JAR_FILE=./build/libs/iou-0.0.1-SNAPSHOT.jar
 ```
 
@@ -74,7 +74,7 @@ DB_DRIVER=org.postgresql.Driver
 ```
 Start instance and specify environment
 ```
-docker run -d --env-file ./env/dev_env --name iou-instance iou
+docker run --detach --rm --env-file ./env/dev_env --publish 8080:8080 --name iou-instance iou
 ```
 
 # Deployment
