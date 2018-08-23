@@ -13,3 +13,5 @@ env:
 
 after_success:
   - docker build -t $REPO:$COMMIT . --build-arg JAR_FILE=./build/libs/$APP-0.0.1-SNAPSHOT.jar
+  - scripts/push-to-repo.sh
+
